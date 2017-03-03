@@ -1,5 +1,5 @@
 
-The barewithme challenge was the 750 point pwnable.  While not exceptionally hard at any one step, there was a fair amount of work to this challenge.
+The barewithme challenge was a 750 point pwnable in Boston Key Party's CTF.  While not exceptionally hard at any one step, there was a fair amount of work to this challenge.
 
 ## Challenge Description
 
