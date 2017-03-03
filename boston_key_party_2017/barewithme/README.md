@@ -127,7 +127,7 @@ easier (although I acknowledge it's kind of cheating).
 
 The bug I just found is in the function `edit_page` (address 0x56AE4).
 
-### TODO Insert edit_page screenshot
+![edit_page](https://github.com/jeffball55/ctf_writeups/blob/master/boston_key_party_2017/barewithme/edit_page.png)
 
 The structs that the library uses are defined as:
 ```
