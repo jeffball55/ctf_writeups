@@ -176,7 +176,7 @@ Now I want to try turn this bug into an arbitrary write to memory. First, let's 
 created.  From the function edit_book (address 0x56C80 in IDA), I can see that there is an array of book pointers stored at
 address 0x4410204.
 
-## TODO Insert edit_book screenshot
+![edit_book](https://github.com/jeffball55/ctf_writeups/blob/master/boston_key_party_2017/barewithme/edit_book.png)
 
 Let's look at that in gdb when running.
 
@@ -320,7 +320,7 @@ The first missing check is in the function create_list_item (0x10B78 in IDA).  T
 before checking if the call to malloc failed.  While this will crash the system if malloc fails, I can't control the contents
 that are written to the interrupt handlers.  Instead the memset will write all 0's over the interrupt handlers.
 
-### TODO Insert create_list_item
+![create_list_item](https://github.com/jeffball55/ctf_writeups/blob/master/boston_key_party_2017/barewithme/create_list_item.png)
 
 The second missing check is in the function soft_int_4_schedule_task (0x10C1C in IDA).  The kernel calls to malloc once to get
 memory for the task's code, and then again to get storage for the task_info struct to track that task.  On the second call
@@ -328,7 +328,7 @@ the kernel does not check if malloc returns NULL.  Thus, if malloc fails, it wil
 contents of the task_info it was creating.  Because the task_name field is passed in from userland and the kernel calls
 strcpy to copy it's contents to the task_info, I can write our own content to the interrupt handlers.
 
-### TODO Insert soft_int_4_schedule_task
+![soft_int_4_schedule_task](https://github.com/jeffball55/ctf_writeups/blob/master/boston_key_party_2017/barewithme/soft_int_4_schedule_task.png)
 
 Now that I had the bug, I needed to cause malloc to fail.  While reversing I found the function
 get_memory_from_kernel_linear_allocator (address 0x10890) that allocates memory linearly, growing upward.  It fails when the
