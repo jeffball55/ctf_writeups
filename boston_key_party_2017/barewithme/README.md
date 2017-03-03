@@ -335,6 +335,8 @@ get_memory_from_kernel_linear_allocator (address 0x10890) that allocates memory 
 next request for memory takes it beyond 0x2800000.  Since this seems to be the backing for the kernel memory, so I just need to
 allocate enough tasks (using the schedule task system call) to take up all of the kernel's memory.
 
+![linear_allocator](https://github.com/jeffball55/ctf_writeups/blob/master/boston_key_party_2017/barewithme/linear_allocator.png)
+
 The shellcode that I used to do this is in the shellcode.s file.  It does 3 loops of decreasing task sizes when scheduling
 tasks, in order to get the memory usage just right.  It took a little trial and error, but I found this call pattern, made
 the first malloc in soft_int_4_schedule_task succeeds, but the second one fail. The code that I overwrote the interrupt
