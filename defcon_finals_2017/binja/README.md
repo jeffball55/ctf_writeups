@@ -51,8 +51,8 @@ instead of cLEMENCy's nytes).  The [Trail of Bits writeup](https://blog.trailofb
 mentions they were able to get some portions added, but couldn't get the entire thing completed.
 
 Other members of our team implemented a python based cLEMENCy assembler, which
-allowed us to enable Binary Ninja's context-menu patcher.  This ended up being
-very vaulable for quickly creating patches for the vulnerable services.
+we integrated to enable the Binary Ninja's context-menu patcher.  This ended up
+being very vaulable for quickly creating patches for the vulnerable services.
 
 ## The Problem
 
@@ -64,16 +64,17 @@ that only understands storing/loading bytes.  Thus, the firmware images were
 bit steams, such that the top 8-bits of the first nyte was in the first byte of
 the file, and the last bit of the first nyte was in the second byte of the file.
 Thus when binary ninja attempted to retrieve the memory at an address, it would
-return the wrong memory bytes (offset by 8.0/9.0).
-
-While we fixed this problem for the disassembly, it did result in the hex output
-being completely wrong.
+return the wrong memory bytes (offset by 9/8). While we were able to fixe this
+problem for the disassembly, it did result in the hex output being completely
+wrong.
 
 ## The Solution
 
-Our solution was rather simple.  We choose to completely ignore the passed in
-data bytes, and instead use the passed in address to read the cLEMENCy firmware
-image ourselves, unpack the bit stream, and retrieve the relevant bytes from the
-firmware.  This allowed us to ensure the right memory was read and decoded.  The
-rest was simply decoding the architecture and tokenizing the output.
+Our solution was rather simple.  We choose to ignore the passed in data bytes
+completely, and instead use the passed in address to read the cLEMENCy firmware
+image from the processor plugin, unpack the bit stream, and retrieve the
+relevant bytes from the firmware.  This allowed us to ensure the right memory
+was read and decoded.  The rest was simply decoding the architecture and
+tokenizing the output.
+
 
