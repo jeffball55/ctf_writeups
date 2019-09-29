@@ -19,7 +19,7 @@ of the challenge was kind enough to again provide 4 signed ROMs, with roughly th
 Recognizing that this emulator will only run signed binaries, we figured we needed to either bypass the crypto or find a
 vulnerability in the MIPS programs that allowed us to gain code execution. Looking through the signature validation code, we see
 that it uses public key crypto (see the key below) that is based off of OpenSSL. Looking through the `check_signature`
-function at 0x42F4 (shown below), it doesn't appear that they made any obvious mistakes.
+function at `0x42F4` (shown below), it doesn't appear that they made any obvious mistakes.
 
 ![key](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeses/key.png)
 
@@ -97,6 +97,8 @@ that it uses a custom randomization algorithm for determining the address of the
 is the same random number generation that is used in the emulated `random` syscall. Thus, if we can predict the next random
 number, we will be able to determine where an executable page is in memory and can complete our exploit. 
 
+![get_random.png](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeses/get_random.png)
+
 After trying and failing to manually reverse the random number generator from within MIPS shellcode, we eventually decided that
 it would be far easier and faster to ship the random number generator's state back to our laptop and reverse it there. As such,
 we wrote a simple `rand`/`write` syscall loop in the emulated MIPS code and received back 128 randomly generated integers. Our
@@ -105,6 +107,4 @@ state. Once Z3 solves for this state, our exploit generates the next random numb
 the MIPS shellcode. The MIPS shellcode then allocates an executable page, copies our AMD64 shellcode to the new page, and
 triggers the stack overflow in the emulator to redirect the emulator's code flow to our AMD64 shellcode. Our AMD64 shellcode
 then spawns a shell and we can read the flag file on the server.
-
-![get_random.png](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeses/get_random.png)
 
