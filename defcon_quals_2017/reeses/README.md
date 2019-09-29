@@ -21,9 +21,9 @@ vulnerability in the MIPS programs that allowed us to gain code execution. Looki
 that it uses public key crypto (see the key below) that is based off of OpenSSL. Looking through the `check_signature`
 function at 0x42F4 (shown below), it doesn't appear that they made any obvious mistakes.
 
-![key](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeces/key.png)
+![key](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeses/key.png)
 
-![check_signature](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeces/check_signature.png)
+![check_signature](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeses/check_signature.png)
 
 ## Stage 1 Exploit
 
@@ -31,7 +31,7 @@ Given that we couldn't find a way to bypass the signature checks on the MIPS ROM
 the MIPS emulator by exploiting a vulnerability in one of the ROM files. As the challenge author was kind enough to provide 4
 signed ROMs, we had quite a bit to reverse. The first step was to write a custom IDA loader for the MIPS ROM format, so we
 could get proper address information. See the included
-[reeces_loader.py](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeces/reeces_loader.py) for an
+[reeses_loader.py](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeses/reeses_loader.py) for an
 IDA loader that parses the MIPS ROM header info. With that accomplished, we set about reversing each of the 4 ROMs. 
 
 ### sample2 - echo server
@@ -46,7 +46,7 @@ been commandeered to run the obfuscation loop shown below. Checking for any bugs
 ensure it is less then the size of buffer (0x80 characters). We also ensured that there weren't any triggerable bugs in the
 emulator involving the custom mtc2 operator.
 
-![obfuscation_loop](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeces/obfuscation_loop.png)
+![obfuscation_loop](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeses/obfuscation_loop.png)
 
 ### sample4 - sha256 input
 `sample4` takes a hash of any input passed to it. The program starts by building a table used in the hash calculation, as
@@ -58,7 +58,7 @@ SHA256 hash to a hexstring and prints it out.
 We continued analyzing this SHA256 hash function, but decided it best to move on. We setup a fuzzer to run against this ROM,
 but then decided to move on to the more complex `sample1` ROM.
 
-![build_table.png](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeces/build_table.png)
+![build_table.png](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeses/build_table.png)
 
 ### sample1 - LZSS compress/decompress
 `sample1` was the largest of the samples and the most complex. This program will compress or decompress a file using the
@@ -85,7 +85,7 @@ instruction. However, for the `0xcfe00000` version of the instruction handler, t
 over top of the stack frame, in such a way that the registers `$a2` and `$a3` would overflow the emulator's saved `RIP`
 register.
 
-![stack_overflow.png](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeces/stack_overflow.png)
+![stack_overflow.png](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeses/stack_overflow.png)
 
 ## Reversing the Random Number Generator
 Now that we've taken control of the emulated MIPS program and can control emulator's `RIP` register, we need to specify an
@@ -106,5 +106,5 @@ the MIPS shellcode. The MIPS shellcode then allocates an executable page, copies
 triggers the stack overflow in the emulator to redirect the emulator's code flow to our AMD64 shellcode. Our AMD64 shellcode
 then spawns a shell and we can read the flag file on the server.
 
-![get_random.png](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeces/get_random.png)
+![get_random.png](https://github.com/jeffball55/ctf_writeups/blob/master/defcon_quals_2017/reeses/get_random.png)
 
